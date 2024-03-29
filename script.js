@@ -49,19 +49,48 @@ function createSquare() {
     squareElement.classList.add("square");
 
     squareElement.addEventListener('mouseenter', (event) => {
-        squareElement.style.backgroundColor = generateSquareColor();
+        setElementColorAndOpacity(squareElement, squareColor);
     });
 
     return squareElement;
 }
 
-function generateSquareColor() {
-    switch (squareColor) {
-        case 'random':
-            return generateRandomHexColor();
-        default:
-            return squareColor;
+function getElementNewOpacity(element) {
+    let backgroundColor = element.style.backgroundColor;
+
+    let match = backgroundColor.match(/rgba?\((\d+), (\d+), (\d+), ([\d.]+)\)/);
+    if (match) {
+        let opacity = parseFloat(match[4]);
+        let newOpacity = opacity + 0.1;
+        return Math.min(newOpacity, 0.99);
+    } else {
+        return 0.1;
     }
+}
+
+function setElementColorAndOpacity(element, elementColor) {
+    let color;
+    const opacity = getElementNewOpacity(element);
+
+    switch (elementColor) {
+        case 'black':
+            color = getRGBAColor(0, 0, 0, opacity);
+            break;
+        case 'red':
+            color = getRGBAColor(256, 0, 0, opacity);
+            break;
+        case 'green':
+            color = getRGBAColor(0, 256, 0, opacity);
+            break;
+        case 'blue':
+            color = getRGBAColor(0, 0, 256, opacity);
+            break;
+        default:
+            color = generateRandomRGBAColor(opacity);
+            break;
+    }
+
+    element.style.setProperty('background-color', color);
 }
 
 function clearGrid() {
@@ -70,20 +99,14 @@ function clearGrid() {
     }
 }
 
-function generateRandomHexColor() {
+function generateRandomRGBAColor(opacity) {
     let red = Math.floor(Math.random() * 256);
     let green = Math.floor(Math.random() * 256);
     let blue = Math.floor(Math.random() * 256);
 
-    let hexColor = "#" +
-        decimalToHexWithLeadingZero(red) +
-        decimalToHexWithLeadingZero(green) +
-        decimalToHexWithLeadingZero(blue);
-
-    return hexColor;
+    return getRGBAColor(red, green, blue, opacity)
 }
 
-function decimalToHexWithLeadingZero(decimalValue) {
-    let hex = decimalValue.toString(16)
-    return hex.length == 1 ? "0" + hex : hex;
+function getRGBAColor(red, green, blue, opacity) {
+    return `rgba(${red}, ${green}, ${blue}, ${opacity})`;
 }
