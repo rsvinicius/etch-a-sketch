@@ -9,6 +9,17 @@ body {
     align-items: center;
 }
 
+header {
+    display: flex;
+    flex-direction: row;
+}
+
+.color-text {
+    padding: 0px 5px;
+    margin: auto;
+    font-size: 15px;
+}
+
 .container {
     width: 832px;
     height: 832px;
@@ -28,8 +39,4 @@ body {
     width: calc(832px / var(--gridSize));
     height: calc(832px / var(--gridSize));
     border: 1px solid black; 
-}
-
-.hover-square {
-    background-color: black;
 }
